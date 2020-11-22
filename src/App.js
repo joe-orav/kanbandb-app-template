@@ -1,6 +1,24 @@
-import React from "react"
+import React, { useState } from "react"
 import "./App.css"
 import KanbanDB from "kanbandb"
+
+const AddCardControl = ({ statuses }) => {
+  return (
+    <div className="add-control">
+      <input
+        type="text"
+        className="add-control-text add-control-field"
+        placeholder="e.g. Bug: TextPoll noy dispatching half stars"
+      />
+      <select className="add-control-field add-control-status">
+        {statuses.map((status) => (
+          <option key={status} value={status}>{status}</option>
+        ))}
+      </select>
+      <button className="add-control-btn">Add New</button>
+    </div>
+  )
+}
 
 const Status = ({ name }) => (
   <div className="status">
@@ -11,13 +29,16 @@ const Status = ({ name }) => (
 const Board = ({ children }) => <div className="board">{children}</div>
 
 function App() {
+  const [statuses] = useState(["To-do", "In Progress", "Done"])
+
   return (
     <div className="container">
       <Board>
-        <Status name="To-do" />
-        <Status name="In Progress" />
-        <Status name="Done" />
+        {statuses.map((status) => (
+          <Status key={status} name={status} />
+        ))}
       </Board>
+      <AddCardControl statuses={statuses} />
     </div>
   )
 }
