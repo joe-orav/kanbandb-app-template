@@ -1,0 +1,45 @@
+.container {
+  width: 100%;
+}
+
+.board {
+  width: 800px;
+  height: 600px;
+  background: #edf3f8;
+  margin: auto;
+  margin-top: 2rem;
+  display: flex;
+  justify-content: space-around;
+}
+
+.status {
+  flex-grow: 1;
+  flex-basis: 0;
+  text-align: center;
+  position: relative;
+}
+
+.status::after {
+  content: "";
+  background: linear-gradient(
+    180deg,
+    rgba(237, 243, 248, 1) 0%,
+    rgba(222, 232, 240, 1) 40%,
+    rgba(222, 232, 240, 1) 90%
+  );
+  height: 100%;
+  width: 3px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.status:last-child::after {
+  display: none;
+}
+
+.status-name {
+  color: #5e60b0;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
