@@ -14,3 +14,25 @@
   z-index: 1;
 }
 
+.alert {
+  position: absolute;
+  left: 0; 
+  right: 0; 
+  top: 540px;
+  margin-left: auto; 
+  margin-right: auto; 
+  min-width: 100px;
+  max-width: 225px;
+  z-index: 5;
+  background: #ff0000;
+  text-align: center;
+  color: #fff;
+  padding: 0.6rem;
+  border-radius: 5px;
+  font-weight: bold;
+  display: none;
+}
+
+.alert.show {
+  display: block;
+}

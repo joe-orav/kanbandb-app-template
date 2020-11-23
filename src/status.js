@@ -20,7 +20,7 @@ const Status = ({
   return (
     <div className="status" ref={dropRef}>
       <p className="status-name">{statusData.label}</p>
-      {cards.map((card) => (
+      {cards.sort((c1, c2) => c2.lastUpdated - c1.lastUpdated).map((card) => (
         <Card
           key={card.id}
           cardData={card}

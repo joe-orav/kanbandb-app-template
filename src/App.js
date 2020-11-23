@@ -7,6 +7,17 @@ import EditCardForm from "./editCardForm"
 
 const Board = ({ children }) => <div className="board">{children}</div>
 
+const Alert = ({ alert, display, update }) => {
+  useEffect(() => {
+    if (alert) {
+      setTimeout(() => {
+        update("")
+      }, 2000)
+    }
+  }, [alert, update])
+  return <div className={`alert ${display && "show"}`}>{alert}</div>
+}
+
 function App() {
   const [dbInstance, setDbInstance] = useState(null)
   const [statuses] = useState([
@@ -20,6 +31,7 @@ function App() {
   const [editCardName, setEditCardName] = useState("")
   const [editCardDesc, setEditCardDesc] = useState("")
   const [editCardStatus, setEditCardStatus] = useState("TODO")
+  const [alertMessage, setAlertMessage] = useState("")
 
   useEffect(() => {
     async function initialize() {
@@ -36,7 +48,7 @@ function App() {
         modifyCardData(cards)
         setDbInstance(instance)
       } catch (err) {
-        console.log("No cards found")
+        setAlertMessage("No cards found")
       }
     }
 
@@ -53,8 +65,9 @@ function App() {
 
       let newCard = await dbInstance.getCardById(cardId)
       modifyCardData([...cards, newCard])
+      window.scrollTo(0, 0)
     } catch {
-      console.log("Unable to add new card")
+      setAlertMessage("Unable to add new card")
     }
   }
 
@@ -78,7 +91,7 @@ function App() {
         modifyCardData(updatedCarData)
       }
     } catch {
-      console.log("Unable to update card data")
+      setAlertMessage("Unable to update card data")
     }
   }
 
@@ -90,7 +103,7 @@ function App() {
         modifyCardData(cards.filter((card) => card.id !== id))
       }
     } catch {
-      console.log("Unable to delete card")
+      setAlertMessage("Unable to delete card")
     }
   }
 
@@ -132,6 +145,11 @@ function App() {
           desc: setEditCardDesc,
           status: setEditCardStatus,
         }}
+      />
+      <Alert
+        display={alertMessage.length > 0}
+        alert={alertMessage}
+        update={setAlertMessage}
       />
     </div>
   )
