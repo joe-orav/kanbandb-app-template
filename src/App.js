@@ -2,57 +2,10 @@ import React, { useState, useEffect, useRef } from "react"
 import "./App.css"
 import AddCardControl from "./addCardControl"
 import KanbanDB from "kanbandb"
+import Status from "./status"
+import { EditCardForm } from "./card"
 
-const Card = ({ name, description, cardRef }) => {
-  return (
-    <div className="card" ref={cardRef}>
-      <p className="card-text">{`${name}: ${description}`}</p>
-      <div className="card-controls">
-        <button className="card-btn card-delete-btn" title="Delete">
-          ✖
-        </button>
-        <button className="card-btn card-edit-btn" title="Edit">
-          ✎
-        </button>
-      </div>
-    </div>
-  )
-}
-
-const Status = ({ name, cards, cardRef }) => {
-
-  function test(e) {
-    e.preventDefault()
-    console.log("tester")
-  }
-
-  return (
-    <div className="status" onDragOver={test}>
-      <p className="status-name">{name}</p>
-      {cards.map((card) => (
-        <Card
-          key={card.id}
-          name={card.name}
-          description={card.description}
-          cardRef={cardRef}
-        />
-      ))}
-    </div>
-  )
-}
-
-const Board = ({ statuses, cards, cardRef }) => (
-  <div className="board">
-    {statuses.map((status) => (
-      <Status
-        key={status.code}
-        name={status.label}
-        cards={cards.filter((card) => card.status === status.code)}
-        cardRef={cardRef}
-      />
-    ))}
-  </div>
-)
+const Board = ({ children }) => <div className="board">{children}</div>
 
 function App() {
   const [dbInstance, setDbInstance] = useState(null)
@@ -62,6 +15,12 @@ function App() {
     { label: "Done", code: "DONE" },
   ])
   const [cards, modifyCardData] = useState([])
+  const [displayEditModal, setDisplayEditModal] = useState(false)
+  const [editCardId, setEditCardId] = useState(null)
+  const [editCardName, setEditCardName] = useState("")
+  const [editCardDesc, setEditCardDesc] = useState("")
+  const [editCardStatus, setEditCardStatus] = useState("TODO")
+
   const cardRef = useRef(null)
 
   useEffect(() => {
@@ -103,10 +62,75 @@ function App() {
     }
   }
 
+  async function handleCardUpdate(id, status, name, description) {
+    try {
+      const card = await dbInstance.getCardById(id)
+      const cardUpdated = await dbInstance.updateCardById(id, {
+        name: name || card.name,
+        description: description || card.description,
+        status: status,
+      })
+
+      if (cardUpdated) {
+        const updatedCarData = await dbInstance.getCards()
+        modifyCardData(updatedCarData)
+      }
+    } catch {
+      console.log("Unable to update card data")
+    }
+  }
+
+  async function handleCardDeletion(id) {
+    try {
+      const isDeleted = await dbInstance.deleteCardById(id)
+
+      if(isDeleted) {
+        modifyCardData(cards.filter(card => card.id !== id))
+      }
+    } catch {
+      console.log("Unable to delete card")
+    }
+  }
+
   return (
     <div className="container">
-      <Board statuses={statuses} cards={cards} cardRef={cardRef} />
+      <Board>
+        {statuses.map((status) => (
+          <Status
+            key={status.code}
+            statusData={status}
+            cards={cards.filter((card) => card.status === status.code)}
+            cardRef={cardRef}
+            onCardDrop={handleCardUpdate}
+            displayModal={(val) => setDisplayEditModal(val)}
+            setEditCardValues={{
+              id: setEditCardId,
+              name: setEditCardName,
+              desc: setEditCardDesc,
+              status: setEditCardStatus
+            }}
+          />
+        ))}
+      </Board>
       <AddCardControl statuses={statuses} onClick={handleNewCard} />
+      <EditCardForm
+        displayForm={displayEditModal}
+        displayModal={(val) => setDisplayEditModal(val)}
+        statuses={statuses}
+        updateCardData={handleCardUpdate}
+        deleteCard={handleCardDeletion}
+        editCardValues={{
+          id: editCardId,
+          name: editCardName,
+          desc: editCardDesc,
+          status: editCardStatus
+        }}
+        setEditCardValues={{
+          name: setEditCardName,
+          desc: setEditCardDesc,
+          status: setEditCardStatus
+        }}
+      />
     </div>
   )
 }

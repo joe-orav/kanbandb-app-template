@@ -1,0 +1,77 @@
+.card {
+  background: #fff;
+  border-radius: 5px;
+  width: 70%;
+  margin: 1.2rem auto;
+  padding: 0.8rem 1rem;
+  min-height: 55px;
+  font-weight: 500;
+  text-align: left;
+  display: flex;
+  box-shadow: 0px 7px 10px 1px rgba(214, 210, 214, 1);
+  cursor: pointer;
+}
+
+.card-text {
+  margin: 0;
+}
+
+.form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+}
+
+.form-overlay.hide {
+  display: none;
+}
+
+.edit-card-form {
+  margin-top: 5rem;
+  background: #fff;
+  min-width: 450px;
+  max-height: 375px;
+  border-radius: 5px;
+  padding: 1rem;
+}
+
+.edit-card-form-header {
+  font-weight: bold;
+  margin: 0;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.edit-card-field {
+  display: block;
+  margin: 0.5rem 0 1rem;
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid rgb(214, 210, 214);
+}
+
+.edit-form-btn-group {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.edit-card-form-btn {
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+  font-size: 1rem;
+  margin: 1rem 0 0;
+}
+
+.edit-card-form-btn.cancel {
+  background: #696969;
+}
+
+.edit-card-form-btn.delete {
+  background: red;
+}

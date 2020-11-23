@@ -11,14 +11,6 @@
   z-index: 1;
 }
 
-.add-control-field {
-  background: #edf1f8;
-  border: none;
-  border-radius: 5px;
-  padding: 10px;
-  font-weight: bold;
-}
-
 .add-control-text {
   flex-grow: 1;
   margin-right: 1.5rem;
@@ -38,17 +30,6 @@
 
 .add-control-status {
   margin-right: 1.3rem;
-}
-
-.add-control-btn {
-  background: #00b883;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  font-weight: bold;
-  text-transform: uppercase;
-  padding: 0 2rem;
-  cursor: pointer;
 }
 
 .add-control-btn:hover {

@@ -10,20 +10,20 @@ const AddCardControl = ({ statuses, onClick }) => {
     <div className="add-control">
       <input
         type="text"
-        className="add-control-text add-control-field"
+        className="form-field add-control-text"
         placeholder="Name"
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
       <input
         type="text"
-        className="add-control-text add-control-field"
+        className="form-field add-control-text"
         placeholder="Description"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
       />
       <select
-        className="add-control-field add-control-status"
+        className="form-field add-control-status"
         value={status}
         onChange={(e) => setStatus(e.target.value)}
       >
@@ -34,7 +34,7 @@ const AddCardControl = ({ statuses, onClick }) => {
         ))}
       </select>
       <button
-        className="add-control-btn"
+        className="form-btn"
         onClick={() => onClick(name, description, status)}
       >
         Add New
