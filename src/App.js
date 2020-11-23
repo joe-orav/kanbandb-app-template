@@ -3,7 +3,7 @@ import "./App.css"
 import AddCardControl from "./addCardControl"
 import KanbanDB from "kanbandb"
 import Status from "./status"
-import { EditCardForm } from "./card"
+import EditCardForm from "./editCardForm"
 
 const Board = ({ children }) => <div className="board">{children}</div>
 
@@ -84,8 +84,8 @@ function App() {
     try {
       const isDeleted = await dbInstance.deleteCardById(id)
 
-      if(isDeleted) {
-        modifyCardData(cards.filter(card => card.id !== id))
+      if (isDeleted) {
+        modifyCardData(cards.filter((card) => card.id !== id))
       }
     } catch {
       console.log("Unable to delete card")
@@ -107,7 +107,7 @@ function App() {
               id: setEditCardId,
               name: setEditCardName,
               desc: setEditCardDesc,
-              status: setEditCardStatus
+              status: setEditCardStatus,
             }}
           />
         ))}
@@ -123,12 +123,12 @@ function App() {
           id: editCardId,
           name: editCardName,
           desc: editCardDesc,
-          status: editCardStatus
+          status: editCardStatus,
         }}
         setEditCardValues={{
           name: setEditCardName,
           desc: setEditCardDesc,
-          status: setEditCardStatus
+          status: setEditCardStatus,
         }}
       />
     </div>

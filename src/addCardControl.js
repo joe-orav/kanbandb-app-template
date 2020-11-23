@@ -6,6 +6,16 @@ const AddCardControl = ({ statuses, onClick }) => {
   const [description, setDescription] = useState("")
   const [status, setStatus] = useState("TODO")
 
+  function handleSubmission() {
+    let newName = name ? name : "Untitled Task"
+    let newDesc = description ? description : "Edit Description"
+
+    onClick(newName, newDesc, status)
+    setName("")
+    setDescription("")
+    setStatus("TODO")
+  }
+
   return (
     <div className="add-control">
       <input
@@ -33,10 +43,7 @@ const AddCardControl = ({ statuses, onClick }) => {
           </option>
         ))}
       </select>
-      <button
-        className="form-btn"
-        onClick={() => onClick(name, description, status)}
-      >
+      <button className="form-btn" onClick={handleSubmission}>
         Add New
       </button>
     </div>

@@ -21,17 +21,6 @@
   color: #bfcede;
 }
 
-.add-control-text:focus,
-.add-control-text:active,
-.add-control-btn:focus,
-.add-control-btn:active {
-  outline: none;
-}
-
 .add-control-status {
   margin-right: 1.3rem;
-}
-
-.add-control-btn:hover {
-  background: #31a87c;
 }
