@@ -1,5 +1,5 @@
 import React from "react"
-import "./status.css"
+import "../styles/status.css"
 import Card from "./card"
 import { useDrop } from "react-dnd"
 

@@ -1,5 +1,8 @@
 import React, { useState } from "react"
-import "./addCardControl.css"
+import "../styles/addCardControl.css"
+import StatusSelectField from "./statusSelectField"
+import Button from "./button"
+import InputField from "./inputField"
 
 const AddCardControl = ({ statuses, onClick }) => {
   const [name, setName] = useState("")
@@ -18,34 +21,25 @@ const AddCardControl = ({ statuses, onClick }) => {
 
   return (
     <div className="add-control">
-      <input
-        type="text"
-        className="form-field add-control-text"
-        placeholder="Name"
+      <InputField
         value={name}
+        className="add-control-text"
         onChange={(e) => setName(e.target.value)}
+        placeholder="Name"
       />
-      <input
-        type="text"
-        className="form-field add-control-text"
-        placeholder="Description"
+      <InputField
         value={description}
+        className="add-control-text"
         onChange={(e) => setDescription(e.target.value)}
+        placeholder="Description"
       />
-      <select
-        className="form-field add-control-status"
+      <StatusSelectField
+        statuses={statuses}
         value={status}
         onChange={(e) => setStatus(e.target.value)}
-      >
-        {statuses.map((status) => (
-          <option key={status.code} value={status.code}>
-            {status.label}
-          </option>
-        ))}
-      </select>
-      <button className="form-btn" onClick={handleSubmission}>
-        Add New
-      </button>
+        className="add-control-status"
+      />
+      <Button label="Add New" onClick={handleSubmission} className="" />
     </div>
   )
 }

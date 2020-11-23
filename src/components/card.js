@@ -1,5 +1,5 @@
 import React from "react"
-import "./card.css"
+import "../styles/card.css"
 import { useDrag } from "react-dnd"
 
 const Card = ({ cardData, displayModal, setEditCardValues }) => {

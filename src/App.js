@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react"
 import "./App.css"
-import AddCardControl from "./addCardControl"
+import AddCardControl from "./components/addCardControl"
 import KanbanDB from "kanbandb"
-import Status from "./status"
-import EditCardForm from "./editCardForm"
+import Status from "./components/status"
+import EditCardForm from "./components/editCardForm"
 
 const Board = ({ children }) => <div className="board">{children}</div>
 
@@ -55,6 +55,7 @@ function App() {
     initialize()
   }, [])
 
+  // Function takes data submitted from the add card control component and creates and displays a new card
   async function handleNewCard(name, description, status) {
     try {
       const cardId = await dbInstance.addCard({
@@ -71,12 +72,14 @@ function App() {
     }
   }
 
+  // Function displays a placeholder for a dragged card for quick rendering when the card is dropped
   function handleCardRelocation(id, status) {
     modifyCardData(
       cards.map((card) => (card.id !== id ? card : { ...card, status: status }))
     )
   }
 
+  // Function handles any modiciations made to a card either through the form or through drag and drop
   async function handleCardUpdate(id, status, name, description) {
     try {
       const card = await dbInstance.getCardById(id)
@@ -95,6 +98,7 @@ function App() {
     }
   }
 
+  // Function handles the deletion of a card through the form
   async function handleCardDeletion(id) {
     try {
       const isDeleted = await dbInstance.deleteCardById(id)

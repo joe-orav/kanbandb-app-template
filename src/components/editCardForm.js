@@ -1,5 +1,8 @@
 import React from "react"
-import "./editCardForm.css"
+import "../styles/editCardForm.css"
+import InputField from "./inputField"
+import Button from "./button"
+import StatusSelectField from "./statusSelectField"
 
 export const EditCardForm = ({
   displayForm,
@@ -42,50 +45,42 @@ export const EditCardForm = ({
       <form className="edit-card-form">
         <p className="edit-card-form-header">Edit Card</p>
         <label className="edit-card-form-label">Name</label>
-        <input
-          type="text"
-          className="form-field edit-card-field"
+        <InputField
+          className="edit-card-field"
           value={editCardValues.name}
           onChange={(e) => handleValueChange(e, setEditCardValues.name)}
+          placeholder=""
         />
         <label className="edit-card-form-label">Description</label>
-        <input
-          type="text"
-          className="form-field edit-card-field"
+        <InputField
+          className="edit-card-field"
           value={editCardValues.desc}
           onChange={(e) => handleValueChange(e, setEditCardValues.desc)}
+          placeholder=""
         />
         <label className="edit-card-form-label">Status</label>
-        <select
-          className="form-field edit-card-field"
+        <StatusSelectField
+          statuses={statuses}
           value={editCardValues.status}
           onChange={(e) => handleValueChange(e, setEditCardValues.status)}
-        >
-          {statuses.map((status) => (
-            <option key={status.code} value={status.code}>
-              {status.label}
-            </option>
-          ))}
-        </select>
+          className="edit-card-field"
+        />
         <div className="edit-form-btn-group">
-          <button
-            className="edit-card-form-btn form-btn delete"
+          <Button
+            label="Delete"
+            className="edit-card-form-btn delete"
             onClick={handleCardDeletion}
-          >
-            Delete
-          </button>
-          <button
-            className="edit-card-form-btn form-btn"
+          />
+          <Button
+            label="Save"
+            className="edit-card-form-btn"
             onClick={handleCardUpdate}
-          >
-            Save
-          </button>
-          <button
-            className="edit-card-form-btn form-btn cancel"
+          />
+          <Button
+            label="Cancel"
+            className="edit-card-form-btn cancel"
             onClick={handleFormCancel}
-          >
-            Cancel
-          </button>
+          />
         </div>
       </form>
     </div>
