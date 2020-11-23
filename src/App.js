@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect } from "react"
 import "./App.css"
 import AddCardControl from "./addCardControl"
 import KanbanDB from "kanbandb"
@@ -20,8 +20,6 @@ function App() {
   const [editCardName, setEditCardName] = useState("")
   const [editCardDesc, setEditCardDesc] = useState("")
   const [editCardStatus, setEditCardStatus] = useState("TODO")
-
-  const cardRef = useRef(null)
 
   useEffect(() => {
     async function initialize() {
@@ -55,11 +53,15 @@ function App() {
 
       let newCard = await dbInstance.getCardById(cardId)
       modifyCardData([...cards, newCard])
-
-      cardRef.current.scrollIntoView()
     } catch {
       console.log("Unable to add new card")
     }
+  }
+
+  function handleCardRelocation(id, status) {
+    modifyCardData(
+      cards.map((card) => (card.id !== id ? card : { ...card, status: status }))
+    )
   }
 
   async function handleCardUpdate(id, status, name, description) {
@@ -100,8 +102,8 @@ function App() {
             key={status.code}
             statusData={status}
             cards={cards.filter((card) => card.status === status.code)}
-            cardRef={cardRef}
             onCardDrop={handleCardUpdate}
+            relocation={handleCardRelocation}
             displayModal={(val) => setDisplayEditModal(val)}
             setEditCardValues={{
               id: setEditCardId,

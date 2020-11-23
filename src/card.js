@@ -1,17 +1,18 @@
 import React from "react"
 import "./card.css"
+import { useDrag } from "react-dnd"
 
-const Card = ({ cardData, cardRef, displayModal, setEditCardValues }) => {
-  function handleDragStart(e) {
-    e.dataTransfer.setData("id", cardData.id)
-    e.target.classList.add("drag")
-  }
-
-  function handleDragEnd(e) {
-    if(!e.dataTransfer.getData("id")) {
-      e.target.classList.remove("drag")
-    }
-  }
+const Card = ({ cardData, displayModal, setEditCardValues }) => {
+  const [{ isDragging }, dragRef] = useDrag({
+    item: {
+      id: cardData.id,
+      type: "card",
+    },
+    isDragging: (monitor) => cardData.id === monitor.getItem().id,
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  })
 
   function handleCardEdit() {
     setEditCardValues.id(cardData.id)
@@ -23,11 +24,8 @@ const Card = ({ cardData, cardRef, displayModal, setEditCardValues }) => {
 
   return (
     <div
-      className="card"
-      ref={cardRef}
-      draggable
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
+      className={`card ${isDragging && "drag"}`}
+      ref={dragRef}
       onClick={handleCardEdit}
     >
       <p className="card-text">{`${cardData.name}: ${cardData.description}`}</p>

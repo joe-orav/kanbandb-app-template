@@ -1,32 +1,29 @@
 import React from "react"
 import "./status.css"
 import Card from "./card"
+import { useDrop } from "react-dnd"
 
 const Status = ({
   statusData,
   cards,
-  cardRef,
   onCardDrop,
   displayModal,
+  relocation,
   setEditCardValues,
 }) => {
-  function handleDragOver(e) {
-    e.preventDefault()
-  }
-
-  function handleDrop(e) {
-    onCardDrop(e.dataTransfer.getData("id"), statusData.code)
-    e.dataTransfer.clearData("id")
-  }
+  const [, dropRef] = useDrop({
+    accept: "card",
+    drop: (i, monitor) => onCardDrop(monitor.getItem().id, statusData.code),
+    hover: (i, monitor) => relocation(monitor.getItem().id, statusData.code)
+  })
 
   return (
-    <div className="status" onDragOver={handleDragOver} onDrop={handleDrop}>
+    <div className="status" ref={dropRef}>
       <p className="status-name">{statusData.label}</p>
       {cards.map((card) => (
         <Card
           key={card.id}
           cardData={card}
-          cardRef={cardRef}
           displayModal={displayModal}
           setEditCardValues={setEditCardValues}
         />
