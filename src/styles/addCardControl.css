@@ -12,7 +12,6 @@
 }
 
 .add-control-text {
-  flex-grow: 1;
   margin-right: 1.5rem;
 }
 
@@ -23,4 +22,6 @@
 
 .add-control-status {
   margin-right: 1.3rem;
+  min-width: 120px;
+  flex-grow: 1;
 }
