@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react"
 import "./App.css"
 import AddCardControl from "./components/addCardControl"
-import KanbanDB from "kanbandb"
 import Status from "./components/status"
 import EditCardForm from "./components/editCardForm"
+import * as db from "./db"
 
 const Board = ({ children }) => <div className="board">{children}</div>
 
@@ -19,7 +19,6 @@ const Alert = ({ alert, display, update }) => {
 }
 
 function App() {
-  const [dbInstance, setDbInstance] = useState(null)
   const [statuses] = useState([
     { label: "To-do", code: "TODO" },
     { label: "In Progress", code: "IN_PROGRESS" },
@@ -31,83 +30,80 @@ function App() {
   const [editCardName, setEditCardName] = useState("")
   const [editCardDesc, setEditCardDesc] = useState("")
   const [editCardStatus, setEditCardStatus] = useState("TODO")
+  const [previousStatus, setPreviousStatus] = useState("")
   const [alertMessage, setAlertMessage] = useState("")
 
   useEffect(() => {
-    async function initialize() {
-      let instance = await KanbanDB.connect()
+    ;(async () => {
+      const connection = await db.initializeDB()
+      if (connection.status === "success") {
+        let getPayload = await db.getCards()
 
-      instance.addCard({
-        name: "Start",
-        description: "Create my first card",
-        status: "TODO",
-      })
-
-      try {
-        let cards = await instance.getCards()
-        modifyCardData(cards)
-        setDbInstance(instance)
-      } catch (err) {
-        setAlertMessage("No cards found")
+        if (getPayload.status === "success") {
+          modifyCardData(getPayload.payload)
+        } else if (getPayload.status === "failure") {
+          setAlertMessage(getPayload.payload)
+        }
+      } else if (connection.status === "failure") {
+        setAlertMessage(connection.payload)
       }
-    }
-
-    initialize()
+    })()
   }, [])
 
   // Function takes data submitted from the add card control component and creates and displays a new card
-  async function handleNewCard(name, description, status) {
-    try {
-      const cardId = await dbInstance.addCard({
-        name,
-        description,
-        status,
-      })
+  async function handleCardAddition(name, description, status) {
+    let addPayload = await db.addCard(name, description, status)
 
-      let newCard = await dbInstance.getCardById(cardId)
-      modifyCardData([...cards, newCard])
-      window.scrollTo(0, 0)
-    } catch {
-      setAlertMessage("Unable to add new card")
+    if (addPayload.status === "success") {
+      modifyCardData([...cards, addPayload.payload])
+    } else if (addPayload.status === "failure") {
+      setAlertMessage(addPayload.payload)
     }
   }
 
   // Function displays a placeholder for a dragged card for quick rendering when the card is dropped
   function handleCardRelocation(id, status) {
+    let draggedCard = cards.filter((card) => card.id === id)[0]
+    
+    if (!previousStatus) {
+      setPreviousStatus(draggedCard.status)
+    }
+
     modifyCardData(
       cards.map((card) => (card.id !== id ? card : { ...card, status: status }))
     )
   }
 
-  // Function handles any modiciations made to a card either through the form or through drag and drop
+  // Function handles any modifications made to a card either through the form or through drag and drop
   async function handleCardUpdate(id, status, name, description) {
-    try {
-      const card = await dbInstance.getCardById(id)
-      const cardUpdated = await dbInstance.updateCardById(id, {
-        name: name || card.name,
-        description: description || card.description,
-        status: status,
-      })
+    let updatePayload = await db.updateCard(id, status, name, description)
 
-      if (cardUpdated) {
-        const updatedCarData = await dbInstance.getCards()
-        modifyCardData(updatedCarData)
-      }
-    } catch {
-      setAlertMessage("Unable to update card data")
+    if (updatePayload.status === "success") {
+      modifyCardData(updatePayload.payload)
+      setPreviousStatus("")
+    } else if (updatePayload.status === "failure") {
+      setAlertMessage(updatePayload.payload)
+      modifyCardData(
+        cards.map((card) => {
+          if (card.id === id && card.status !== previousStatus) {
+            return { ...card, status: previousStatus }
+          } else {
+            return card
+          }
+        })
+      )
+      setPreviousStatus("")
     }
   }
 
   // Function handles the deletion of a card through the form
   async function handleCardDeletion(id) {
-    try {
-      const isDeleted = await dbInstance.deleteCardById(id)
+    let deletePayload = await db.deleteCard(id)
 
-      if (isDeleted) {
-        modifyCardData(cards.filter((card) => card.id !== id))
-      }
-    } catch {
-      setAlertMessage("Unable to delete card")
+    if (deletePayload.status === "success") {
+      modifyCardData(cards.filter((card) => card.id !== id))
+    } else if (deletePayload.status === "failure") {
+      setAlertMessage(deletePayload.payload)
     }
   }
 
@@ -131,7 +127,7 @@ function App() {
           />
         ))}
       </Board>
-      <AddCardControl statuses={statuses} onClick={handleNewCard} />
+      <AddCardControl statuses={statuses} onClick={handleCardAddition} />
       <EditCardForm
         displayForm={displayEditModal}
         displayModal={(val) => setDisplayEditModal(val)}

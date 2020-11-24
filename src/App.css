@@ -1,14 +1,15 @@
 .container {
   width: 100%;
   min-width: 800px;
+  padding-top: 2rem;
 }
 
 .board {
   width: 800px;
-  min-height: 600px;
+  height: 90%;
   background: #edf3f8;
   margin: auto;
-  margin-top: 2rem;
+  min-height: 400px;
   display: flex;
   justify-content: space-around;
   position: relative;
@@ -16,10 +17,9 @@
 }
 
 .alert {
-  position: absolute;
-  left: 0; 
-  right: 0; 
-  top: 540px;
+  position: fixed;
+  right: 20px; 
+  bottom: 20px;
   margin-left: auto; 
   margin-right: auto; 
   min-width: 100px;

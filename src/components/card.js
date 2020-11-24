@@ -24,7 +24,7 @@ const Card = ({ cardData, displayModal, setEditCardValues }) => {
 
   return (
     <div
-      className={`card ${isDragging && "drag"}`}
+      className={`card${isDragging ? " drag" : ""}`}
       ref={dragRef}
       onClick={handleCardEdit}
     >
